@@ -1,0 +1,140 @@
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f4f7f6;
+}
+
+.login-page {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  background-color: #e0f7fa;
+}
+
+.login-container {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+  width: 300px;
+}
+
+.logo {
+  width: 100px;
+  margin-bottom: 20px;
+}
+
+.input-field {
+  width: 100%;
+  padding: 10px;
+  margin: 10px 0;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.login-button {
+  width: 100%;
+  padding: 10px;
+  background-color: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.login-button:hover {
+  background-color: #45a049;
+}
+
+.main-container {
+  display: flex;
+  min-height: 100vh;
+}
+
+.toolbar {
+  background-color: #4CAF50;
+  padding: 10px;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.menu-toggle {
+  background-color: transparent;
+  border: none;
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.sidebar {
+  position: fixed;
+  left: -200px;
+  width: 200px;
+  height: 100%;
+  background-color: #4CAF50;
+  transition: left 0.3s ease-in-out;
+}
+
+.sidebar.open {
+  left: 0;
+}
+
+.sidebar ul {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+.sidebar ul li {
+  padding: 20px;
+  color: white;
+  cursor: pointer;
+  border-bottom: 1px solid white;
+}
+
+.content {
+  margin-left: 20px;
+  margin-right: 20px;
+  padding: 20px;
+  width: calc(100% - 40px);
+}
+
+.week-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+.week-table th, .week-table td {
+  padding: 15px;
+  text-align: center;
+  border: 1px solid #ddd;
+}
+
+.day-slot {
+  width: 100%;
+  height: 50px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  margin-top: 5px;
+}
+
+.chat-box {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.chat-box textarea {
+  width: 100%;
+  padding: 10px;
+  resize: none;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+}
