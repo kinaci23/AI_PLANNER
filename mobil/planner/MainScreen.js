@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { View, Text, Button, StyleSheet, TouchableOpacity, FlatList, Modal, TextInput } from 'react-native';
+// MainScreen.js
+import React, { useState } from 'react';
+import { View, Text, Button, StyleSheet, TouchableOpacity, FlatList, Modal, TextInput, ScrollView } from 'react-native';
 import { Calendar } from 'react-native-calendars';
 
 const MainScreen = () => {
@@ -8,6 +9,21 @@ const MainScreen = () => {
   const [plans, setPlans] = useState({});
   const [modalVisible, setModalVisible] = useState(false);
   const [newPlan, setNewPlan] = useState('');
+
+  // --- Finans ---
+  const [financeModalVisible, setFinanceModalVisible] = useState(false);
+  const [expenses, setExpenses] = useState({
+    kira: '',
+    fatura: '',
+    gida: '',
+    ulasim: '',
+    egitim: '',
+    eglence: '',
+  });
+
+  const expenseCategories = ['kira', 'fatura', 'gida', 'ulasim', 'egitim', 'eglence'];
+
+  const totalExpense = Object.values(expenses).reduce((sum, val) => sum + (parseFloat(val) || 0), 0);
 
   const toggleSidebar = () => {
     setSidebarOpen(!sidebarOpen);
@@ -41,11 +57,12 @@ const MainScreen = () => {
         </View>
       )}
 
-      <View style={styles.content}>
+      <ScrollView style={styles.content}>
         <Calendar
           onDayPress={(day) => setSelectedDate(day.dateString)}
           markedDates={selectedDate ? { [selectedDate]: { selected: true, selectedColor: '#4CAF50' } } : {}}
         />
+
         {selectedDate && (
           <View style={styles.planSection}>
             <Text style={styles.dateTitle}>{selectedDate} için planlar:</Text>
@@ -64,9 +81,29 @@ const MainScreen = () => {
             </TouchableOpacity>
           </View>
         )}
-        <Button title="Logout" onPress={() => console.log('Logging out')} />
-      </View>
 
+        {/* --- Finans Yönetimi Kartı --- */}
+        <View style={styles.financeCard}>
+          <Text style={styles.financeTitle}>📊 Aylık Harcamalar</Text>
+          {expenseCategories.map((cat) => (
+            <View key={cat} style={styles.financeRow}>
+              <Text style={styles.financeLabel}>{cat.toUpperCase()}</Text>
+              <Text style={styles.financeValue}>{expenses[cat] || 0} ₺</Text>
+            </View>
+          ))}
+          <View style={styles.financeTotal}>
+            <Text style={styles.financeLabel}>Toplam</Text>
+            <Text style={styles.financeValue}>{totalExpense} ₺</Text>
+          </View>
+          <TouchableOpacity style={styles.addButton} onPress={() => setFinanceModalVisible(true)}>
+            <Text style={styles.addButtonText}>Finans Düzenle</Text>
+          </TouchableOpacity>
+        </View>
+
+        <Button title="Logout" onPress={() => console.log('Logging out')} />
+      </ScrollView>
+
+      {/* Plan Ekleme Modali */}
       <Modal visible={modalVisible} transparent animationType="slide">
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
@@ -78,6 +115,27 @@ const MainScreen = () => {
             />
             <Button title="Ekle" onPress={addPlan} />
             <Button title="İptal" onPress={() => setModalVisible(false)} color="red" />
+          </View>
+        </View>
+      </Modal>
+
+      {/* Finans Girişi Modali */}
+      <Modal visible={financeModalVisible} transparent animationType="slide">
+        <View style={styles.modalContainer}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>Aylık Giderlerini Gir</Text>
+            {expenseCategories.map((cat) => (
+              <TextInput
+                key={cat}
+                placeholder={`${cat.toUpperCase()} (₺)`}
+                keyboardType="numeric"
+                style={styles.input}
+                value={expenses[cat]}
+                onChangeText={(value) => setExpenses((prev) => ({ ...prev, [cat]: value }))}
+              />
+            ))}
+            <Button title="Kaydet" onPress={() => setFinanceModalVisible(false)} />
+            <Button title="İptal" onPress={() => setFinanceModalVisible(false)} color="red" />
           </View>
         </View>
       </Modal>
@@ -122,7 +180,6 @@ const styles = StyleSheet.create({
   },
   content: {
     padding: 20,
-    flex: 1,
   },
   planSection: {
     marginTop: 20,
@@ -164,12 +221,52 @@ const styles = StyleSheet.create({
     padding: 20,
     borderRadius: 8,
   },
+  modalTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
   input: {
     borderWidth: 1,
     borderColor: '#ccc',
     marginBottom: 10,
     borderRadius: 5,
     padding: 10,
+  },
+  // --- Finans Stillendirme ---
+  financeCard: {
+    backgroundColor: '#fff',
+    borderRadius: 10,
+    padding: 15,
+    marginTop: 30,
+    shadowColor: '#000',
+    shadowOpacity: 0.1,
+    shadowRadius: 5,
+    elevation: 5,
+  },
+  financeTitle: {
+    fontSize: 18,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  financeRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 5,
+  },
+  financeLabel: {
+    fontWeight: '500',
+  },
+  financeValue: {
+    fontWeight: '500',
+  },
+  financeTotal: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginTop: 10,
+    paddingTop: 10,
+    borderTopWidth: 1,
+    borderTopColor: '#ddd',
   },
 });
 
